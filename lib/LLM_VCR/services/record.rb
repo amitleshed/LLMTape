@@ -29,28 +29,36 @@ module LLMVCR
       end
 
       private
-
+      
       def generate_fixture
+        existing_created_at = @metadata["created_at"] || @metadata[:created_at]
         fixture_data = {
           "description" => @description,
           "data"        => {
-            "id"          => generate_hash(@description),
-            "request"     => @request,
-            "response"    => @response,
-            "metadata"    => @metadata.merge({ "created_at" => Time.now.utc.iso8601 })
+            "id"       => generate_hash(@description),
+            "request"  => @request,
+            "response" => @response,
+            "metadata" => @metadata.merge({ :created_at => existing_created_at || Time.now.utc.iso8601 })
           }
         }
-
-        fixture_path = File.join(
+      
+        fixture_file_path = File.join(
           LLMVCR.fixtures_directory_path,
           "llm_calls.yml"
         )
+      
+        file_exists = File.exist?(fixture_file_path)
+        fixtures    = YAML.load_stream(File.read(fixture_file_path)) if file_exists
+        fixtures    = [] unless file_exists
+      
+        existing_index = fixtures.find_index { |f| f["description"] == @description }
 
-        File.open(fixture_path, "w") do |file|
-          file.write(fixture_data.to_yaml)
+        fixtures[existing_index] = fixture_data if existing_index
+        fixtures << fixture_data                unless existing_index
+      
+        File.open(fixture_file_path, "w") do |file|
+          fixtures.each { |fixture| file.write(fixture.to_yaml) }
         end
-
-        puts "Fixture saved to #{fixture_path}"
       end
 
       def generate_hash(description)

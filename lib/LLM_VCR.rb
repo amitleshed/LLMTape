@@ -26,9 +26,7 @@ module LLMVCR
       fixture_path   = File.join(FIXTURES_DIRECTORY_PATH, "#{fixture_description}.yml")
       operation_mode = record ? :record : mode 
 
-      stale = LLMVCR::Services::StaleBuster.call(
-        description: description
-      )
+      stale = LLMVCR::Services::StaleBuster.call(description)
 
       LLMVCR::Services::Record.call(
         description: fixture_description,
