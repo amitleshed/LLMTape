@@ -9,20 +9,12 @@ module LLMVCR
         stale?
       end
 
-      def self.find_fixture(fixture_path, description)
-        return nil unless File.exist?(fixture_path)
-
-        YAML.load_stream(File.read(fixture_path))
-            .compact
-            .find { |doc| (doc["description"] || doc[:description]) == description }
-      end
-
       private
 
       def self.stale?
         return true unless file_exists?
 
-        fixture    = find_fixture(fixture_path, @description)
+        fixture    = LLMVCR::Services::Utilities.find_fixture(fixture_path, @description)
         created_at = fixture["data"]["metadata"]["created_at"] || fixture["data"]["metadata"][:created_at]
         return true if created_at.nil?
 

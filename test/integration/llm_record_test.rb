@@ -29,7 +29,7 @@ class LLMRecordTest < Minitest::Test
 
     assert File.exist?(FIXTURE_PATH), "Fixture file should be created"
 
-    fixture = LLMVCR::Services::StaleBuster::find_fixture(FIXTURE_PATH, "Basic LLM call")
+    fixture = LLMVCR::Services::Utilities.find_fixture(FIXTURE_PATH, "Basic LLM call")
     assert_equal "Basic LLM call", fixture["description"]
     assert_equal request,          fixture["data"]["request"]
     assert_equal response,         fixture["data"]["response"]

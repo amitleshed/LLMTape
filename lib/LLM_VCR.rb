@@ -4,6 +4,7 @@ require_relative "LLM_VCR/version"
 require_relative "LLM_VCR/services/record"
 require_relative "LLM_VCR/services/replay"
 require_relative "LLM_VCR/services/stale_buster"
+require_relative "LLM_VCR/services/utilities"
 
 module LLMVCR
   class << self
