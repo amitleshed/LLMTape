@@ -8,29 +8,34 @@ module LLMVCR
     class Record
       attr_reader :description, :request, :response, :metadata
 
-      def self.call(description:, request:, response:, metadata: {})
+      def self.call(description:, request:, response:, metadata: {}, path: LLMVCR.fixtures_directory_path)
         new(
           description: description,
           request:     request,
           response:    response,
-          metadata:    metadata
+          metadata:    metadata,
+          path:        path
         ).call
       end
 
-      def initialize(description:, request:, response:, metadata: {})
+      def initialize(description:, request:, response:, metadata: {}, path: LLMVCR.fixtures_directory_path)
         @description = description
         @request     = request
         @response    = response
         @metadata    = metadata
+        @path        = path 
       end
 
       def call
         generate_fixture
+        LLMVCR::Services::Utilities.find_fixture(@path, @description)
       end
 
       private
       
       def generate_fixture
+        # TODO: get created_at out of metadata 
+        
         existing_created_at = @metadata["created_at"] || @metadata[:created_at]
         fixture_data = {
           "description" => @description,

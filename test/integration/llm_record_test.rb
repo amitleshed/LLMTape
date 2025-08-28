@@ -20,11 +20,12 @@ class LLMRecordTest < Minitest::Test
     request  = { prompt: "hello" }
     response = { text: "hi" }
 
-    LLMVCR::Services::Record.call(
+    new_fixture = LLMVCR::Services::Record.call(
       description: "Basic LLM call",
       request:     request,
       response:    response,
-      metadata:    { record: "the tape" }
+      metadata:    { record: "the tape" },
+      path:        FIXTURE_PATH
     )
 
     assert File.exist?(FIXTURE_PATH), "Fixture file should be created"
@@ -34,5 +35,6 @@ class LLMRecordTest < Minitest::Test
     assert_equal request,          fixture["data"]["request"]
     assert_equal response,         fixture["data"]["response"]
     assert_equal "the tape",       fixture["data"]["metadata"][:record]
+    assert_equal new_fixture,      fixture
   end
 end

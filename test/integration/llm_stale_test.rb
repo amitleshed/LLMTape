@@ -25,13 +25,13 @@ class LLMStaleTest < Minitest::Test
       description: "Basic LLM Fresh call",
       request:     request,
       response:    response,
-      metadata:    { record: "the tape", created_at: (Time.now - 3600).utc.iso8601 }
+      metadata:    { record: "the tape", created_at: (Time.now - 3600).utc.iso8601 },
+      path:        FIXTURE_PATH
     )
 
     assert File.exist?(FIXTURE_PATH), "Fixture file should be created"
 
     stale = LLMVCR::Services::StaleBuster.call("Basic LLM Fresh call")
-
     assert_equal false, stale, "Fixture should not be stale"
   end
 
@@ -43,13 +43,13 @@ class LLMStaleTest < Minitest::Test
       description: "Basic LLM Stale call",
       request:     request,
       response:    response,
-      metadata:    { record: "the tape", created_at: (Time.now - (90000 * 31)).utc.iso8601 }
+      metadata:    { record: "the tape", created_at: (Time.now - (90000 * 31)).utc.iso8601 },
+      path:        FIXTURE_PATH
     )
 
     assert File.exist?(FIXTURE_PATH), "Fixture file should be created"
 
     stale = LLMVCR::Services::StaleBuster.call("Basic LLM Stale call")
-
     assert_equal true, stale, "Fixture should be stale"
   end
 end
