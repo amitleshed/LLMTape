@@ -8,6 +8,22 @@ class TestLLMVCR < Minitest::Test
   end
 
   def test_it_does_something_useful
-    assert false
+    LLMVCR.configure(
+      fixtures_directory_path: "tmp/fixtures",
+      mode: :auto
+    )
+
+    assert_equal :auto, LLMVCR.mode
+  end
+
+  def test_flow
+    LLMVCR.configure(
+      fixtures_directory_path: "tmp/fixtures",
+      mode: :auto
+    )
+
+    response = LLMVCR.use("My second LLM call") do
+      { prompt: "Hello, LLM!" }
+    end
   end
 end

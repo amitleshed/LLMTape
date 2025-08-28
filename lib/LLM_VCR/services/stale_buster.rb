@@ -1,4 +1,5 @@
 require "yaml"
+require "debug"
 
 module LLMVCR
   module Services
@@ -14,7 +15,9 @@ module LLMVCR
       def self.stale?
         return true unless file_exists?
 
-        fixture    = LLMVCR::Services::Utilities.find_fixture(fixture_path, @description)
+        fixture = LLMVCR::Services::Utilities.find_fixture(fixture_path, @description)
+        return true if fixture.nil?
+        
         created_at = fixture["data"]["metadata"]["created_at"] || fixture["data"]["metadata"][:created_at]
         return true if created_at.nil?
 

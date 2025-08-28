@@ -25,15 +25,15 @@ module LLMVCR
       raise ArgumentError, "Fixture description is required" if fixture_description.nil? || fixture_description.strip.empty?
 
       fixture_path   = File.join(FIXTURES_DIRECTORY_PATH, "#{fixture_description}.yml")
-      operation_mode = record ? :record : mode 
+      @operation_mode = record ? :record : mode 
 
-      stale = LLMVCR::Services::StaleBuster.call(description)
+      @stale = LLMVCR::Services::StaleBuster.call(fixture_description)
 
       LLMVCR::Services::Record.call(
         description: fixture_description,
         request:     yield,
-        response:    nil,
-        metadata:    { fixture_path: fixture_path, mode: operation_mode }
+        response:    block.call,
+        metadata:    { fixture_path: fixture_path, mode: @operation_mode }
       ) if should_record?
 
       LLMVCR::Services::Replay.call(
@@ -48,11 +48,11 @@ module LLMVCR
   FIXTURES_DIRECTORY_PATH = "test/fixtures/llm"
   MODE                    = (ENV["LLM_VCR"] || "auto").to_sym
 
-  def should_replay?
-    (operation_mode == :replay || operation_mode == :auto) && !stale
+  def self.should_replay?
+    (@operation_mode == :replay || @operation_mode == :auto) && !@stale
   end
 
-  def should_record?
-    operation_mode == :record || stale
+  def self.should_record?
+    @operation_mode == :record || @stale
   end
 end

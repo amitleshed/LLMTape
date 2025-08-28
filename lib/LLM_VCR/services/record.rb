@@ -28,6 +28,7 @@ module LLMVCR
 
       def call
         generate_fixture
+        puts "Recorded fixture: #{@description}"
         LLMVCR::Services::Utilities.find_fixture(@path, @description)
       end
 
@@ -35,7 +36,7 @@ module LLMVCR
       
       def generate_fixture
         # TODO: get created_at out of metadata 
-        
+
         existing_created_at = @metadata["created_at"] || @metadata[:created_at]
         fixture_data = {
           "description" => @description,

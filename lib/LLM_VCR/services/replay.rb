@@ -18,6 +18,7 @@ module LLMVCR
       end
 
       def call
+        puts "Replaying fixture: #{@description}"
         fixture = LLMVCR::Services::Utilities.find_fixture(@fixture_path, @description)
       end
     end
