@@ -20,25 +20,26 @@ module LLMVCR
       FileUtils.mkdir_p(self.fixtures_directory_path)
     end
 
-    def use(fixture_description, record: false, &block)
+    def use(fixture_description, record: false, request: nil, &block)
       raise ArgumentError, "Block is required" unless block_given?
       raise ArgumentError, "Fixture description is required" if fixture_description.nil? || fixture_description.strip.empty?
 
-      fixture_path   = File.join(FIXTURES_DIRECTORY_PATH, "#{fixture_description}.yml")
+      fixture_path    = File.join(FIXTURES_DIRECTORY_PATH, "#{fixture_description}.yml")
+      req = request || {}
+      res = block.call
       @operation_mode = record ? :record : mode 
-
-      @stale = LLMVCR::Services::StaleBuster.call(fixture_description)
+      @stale = LLMVCR::Services::StaleBuster.call(fixture_description, req[:prompt])
 
       LLMVCR::Services::Record.call(
         description: fixture_description,
-        request:     yield,
-        response:    block.call,
+        request:     req,
+        response:    res,
         metadata:    { fixture_path: fixture_path, mode: @operation_mode }
       ) if should_record?
 
       LLMVCR::Services::Replay.call(
         description: fixture_description,
-        request:     yield
+        request:     req
       ) if should_replay?
     end
   end
