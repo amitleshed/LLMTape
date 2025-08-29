@@ -4,14 +4,6 @@
 **LLMTape** is a lightweight Ruby gem for testing code that calls Large Language Models.
 It works like a cassette tape: record an API call once, then replay it forever.
 
-🔒 Deterministic tests — no more flaky network calls or changing model outputs in CI.
-
-⚡ Fast & cheap — hit the API only when you want to refresh a tape.
-
-📼 Fixture-based — stores requests and responses in human-readable YAML.
-
-🧪 Seamless — wrap any LLM client call in LLMTape.use("name") { ... }.
-
 ---
 
 ## 🌟 Features
