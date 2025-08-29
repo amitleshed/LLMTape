@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in LLM_VCR.gemspec
+# Specify your gem's dependencies in LLMTape.gemspec
 gemspec
 
 gem "irb"
