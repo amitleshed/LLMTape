@@ -1,7 +1,7 @@
 require "yaml"
 require "debug"
 
-module LLMVCR
+module LLMTape
   module Services
     class StaleBuster
       def self.call(description, current_prompt)
@@ -16,7 +16,7 @@ module LLMVCR
       def self.stale?(current_prompt:)
         return true unless file_exists?
       
-        fixture = LLMVCR::Services::Utilities.find_fixture(fixture_path, @description)
+        fixture = LLMTape::Services::Utilities.find_fixture(fixture_path, @description)
         return true unless fixture
       
         created_at  = fixture.dig("data", "metadata", :created_at)&.to_s
@@ -34,7 +34,7 @@ module LLMVCR
 
       def self.fixture_path
         File.join(
-          LLMVCR.fixtures_directory_path,
+          LLMTape.fixtures_directory_path,
           "llm_calls.yml"
         )
       end

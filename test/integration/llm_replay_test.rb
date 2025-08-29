@@ -10,7 +10,7 @@ class LLMReplayTest < Minitest::Test
   def setup
     # FileUtils.mkdir_p(FIXTURE_DIR)
 
-    LLMVCR.configure(
+    LLMTape.configure(
       fixtures_directory_path: FIXTURE_DIR,
       mode: :replay
     )
@@ -24,7 +24,7 @@ class LLMReplayTest < Minitest::Test
     request  = { prompt: "hello" }
     response = { text: "hi" }
 
-    new_fixture = LLMVCR::Services::Record.call(
+    new_fixture = LLMTape::Services::Record.call(
       description: "Basic LLM Call -> Should Record",
       request:     request,
       response:    response,
@@ -32,7 +32,7 @@ class LLMReplayTest < Minitest::Test
       path:        FIXTURE_PATH
     )
 
-    assert_equal new_fixture, LLMVCR::Services::Replay.call(
+    assert_equal new_fixture, LLMTape::Services::Replay.call(
       description: "Basic LLM Call -> Should Record",
       request:     request
     )

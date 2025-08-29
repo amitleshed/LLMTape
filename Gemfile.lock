@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    LLM_VCR (0.1.0)
+    LLMTape (0.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -36,7 +36,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  LLM_VCR!
+  LLMTape!
   debug
   irb
   minitest (~> 5.16)

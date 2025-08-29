@@ -1,9 +1,9 @@
-module LLMVCR
+module LLMTape
   module Services
     class Replay
       attr_reader :description, :request
 
-      def self.call(description:, request:, path: File.join(LLMVCR.fixtures_directory_path, "llm_calls.yml"))
+      def self.call(description:, request:, path: File.join(LLMTape.fixtures_directory_path, "llm_calls.yml"))
         new(
           description: description,
           request:     request,
@@ -11,7 +11,7 @@ module LLMVCR
         ).call
       end
 
-      def initialize(description:, request:, path: File.join(LLMVCR.fixtures_directory_path, "llm_calls.yml"))
+      def initialize(description:, request:, path: File.join(LLMTape.fixtures_directory_path, "llm_calls.yml"))
         @description  = description
         @request      = request
         @fixture_path = path
@@ -19,7 +19,7 @@ module LLMVCR
 
       def call
         puts "Replaying fixture: #{@description}"
-        fixture = LLMVCR::Services::Utilities.find_fixture(@fixture_path, @description)
+        fixture = LLMTape::Services::Utilities.find_fixture(@fixture_path, @description)
       end
     end
   end

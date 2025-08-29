@@ -3,12 +3,12 @@ require "fileutils"
 require "yaml"
 require "time"
 
-module LLMVCR
+module LLMTape
   module Services
     class Record
       attr_reader :description, :request, :response, :metadata
 
-      def self.call(description:, request:, response:, metadata: {}, path: LLMVCR.fixtures_directory_path)
+      def self.call(description:, request:, response:, metadata: {}, path: LLMTape.fixtures_directory_path)
         new(
           description: description,
           request:     request,
@@ -18,7 +18,7 @@ module LLMVCR
         ).call
       end
 
-      def initialize(description:, request:, response:, metadata: {}, path: LLMVCR.fixtures_directory_path)
+      def initialize(description:, request:, response:, metadata: {}, path: LLMTape.fixtures_directory_path)
         @description = description
         @request     = request
         @response    = response
@@ -29,7 +29,7 @@ module LLMVCR
       def call
         generate_fixture
         puts "Recorded fixture: #{@description}"
-        LLMVCR::Services::Utilities.find_fixture(@path, @description)
+        LLMTape::Services::Utilities.find_fixture(@path, @description)
       end
 
       private
@@ -49,7 +49,7 @@ module LLMVCR
         }
       
         fixture_file_path = File.join(
-          LLMVCR.fixtures_directory_path,
+          LLMTape.fixtures_directory_path,
           "llm_calls.yml"
         )
       

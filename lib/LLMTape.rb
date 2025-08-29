@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require_relative "LLM_VCR/version"
-require_relative "LLM_VCR/services/record"
-require_relative "LLM_VCR/services/replay"
-require_relative "LLM_VCR/services/stale_buster"
-require_relative "LLM_VCR/services/utilities"
+require_relative "LLMTape/version"
+require_relative "LLMTape/services/record"
+require_relative "LLMTape/services/replay"
+require_relative "LLMTape/services/stale_buster"
+require_relative "LLMTape/services/utilities"
 
-module LLMVCR
+module LLMTape
   class << self
     attr_accessor :fixtures_directory_path, :mode
 
@@ -28,16 +28,16 @@ module LLMVCR
       req = request || {}
       res = block.call
       @operation_mode = record ? :record : mode 
-      @stale = LLMVCR::Services::StaleBuster.call(fixture_description, req[:prompt])
+      @stale = LLMTape::Services::StaleBuster.call(fixture_description, req[:prompt])
 
-      LLMVCR::Services::Record.call(
+      LLMTape::Services::Record.call(
         description: fixture_description,
         request:     req,
         response:    res,
         metadata:    { fixture_path: fixture_path, mode: @operation_mode }
       ) if should_record?
 
-      LLMVCR::Services::Replay.call(
+      LLMTape::Services::Replay.call(
         description: fixture_description,
         request:     req
       ) if should_replay?
@@ -47,7 +47,7 @@ module LLMVCR
   private
 
   FIXTURES_DIRECTORY_PATH = "test/fixtures/llm"
-  MODE                    = (ENV["LLM_VCR"] || "auto").to_sym
+  MODE                    = (ENV["LLMTape"] || "auto").to_sym
 
   def self.should_replay?
     (@operation_mode == :replay || @operation_mode == :auto) && !@stale

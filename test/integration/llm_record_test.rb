@@ -10,7 +10,7 @@ class LLMRecordTest < Minitest::Test
   def setup
     FileUtils.mkdir_p(FIXTURE_DIR)
 
-    LLMVCR.configure(
+    LLMTape.configure(
       fixtures_directory_path: FIXTURE_DIR,
       mode: :record
     )
@@ -20,7 +20,7 @@ class LLMRecordTest < Minitest::Test
     request  = { prompt: "hello" }
     response = { text: "hi" }
 
-    new_fixture = LLMVCR::Services::Record.call(
+    new_fixture = LLMTape::Services::Record.call(
       description: "Basic LLM call",
       request:     request,
       response:    response,
@@ -30,7 +30,7 @@ class LLMRecordTest < Minitest::Test
 
     assert File.exist?(FIXTURE_PATH), "Fixture file should be created"
 
-    fixture = LLMVCR::Services::Utilities.find_fixture(FIXTURE_PATH, "Basic LLM call")
+    fixture = LLMTape::Services::Utilities.find_fixture(FIXTURE_PATH, "Basic LLM call")
     assert_equal "Basic LLM call", fixture["description"]
     assert_equal request,          fixture["data"]["request"]
     assert_equal response,         fixture["data"]["response"]

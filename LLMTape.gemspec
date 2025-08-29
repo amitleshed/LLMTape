@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "lib/LLM_VCR/version"
+require_relative "lib/LLMTape/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "LLM_VCR"
-  spec.version = LLMVCR::VERSION
+  spec.name = "LLMTape"
+  spec.version = LLMTape::VERSION
   spec.authors = ["Amit Leshed"]
   spec.email = ["amitleshed@icloud.com"]
 

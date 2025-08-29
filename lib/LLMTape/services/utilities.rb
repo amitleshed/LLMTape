@@ -1,7 +1,7 @@
 require "yaml"
 require "digest"
 
-module LLMVCR
+module LLMTape
   module Services
     class Utilities
       def self.generate_hash(description)
