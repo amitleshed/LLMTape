@@ -1,30 +1,87 @@
-# LLMTape
 
-TODO: Delete this and the text below, and describe your gem
+# 🎥 LLMTape
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/LLMTape`. To experiment with that code, run `bin/console` for an interactive prompt.
+**LLMTape** is a lightweight Ruby gem for testing code that calls Large Language Models.
+It works like a cassette tape: record an API call once, then replay it forever.
 
-## Installation
+🔒 Deterministic tests — no more flaky network calls or changing model outputs in CI.
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+⚡ Fast & cheap — hit the API only when you want to refresh a tape.
 
-Install the gem and add to the application's Gemfile by executing:
+📼 Fixture-based — stores requests and responses in human-readable YAML.
+
+🧪 Seamless — wrap any LLM client call in LLMTape.use("name") { ... }.
+
+LLMTape makes it easy to develop against live LLMs locally while ensuring your test suite stays stable and reproducible.
+---
+
+## 🌟 Features
+
+- **Record LLM Calls**: Capture requests and responses and save them as fixtures.
+- **Replay Fixtures**: Simulate LLM responses without making real API calls.
+- **Stale Detection**: Automatically detect outdated fixtures and refresh them.
+- **Flexible Modes**: Choose between `:record`, `:replay`, or `:auto` modes for seamless operation.
+- **Easy Configuration**: Set up your fixtures directory and mode in just a few lines of code.
+
+**🎥 Record & Replay** – Capture any LLM API call once, then replay it in future test runs.
+
+**🔒 Deterministic Tests** – Eliminate flaky outputs and unstable CI runs caused by live LLM calls.
+
+**📼 Human-Readable Fixtures** – Responses are stored as YAML “tapes” you can inspect, diff, and commit.
+
+**⚡ Fast & Cheap** – No repeated API calls in CI; only re-record when your prompt or logic changes.
+
+**🧪 Client-Agnostic** – Works with any Ruby LLM client (e.g. ruby_llm), since you wrap the call yourself.
+
+**⏳ Staleness Detection** – Marks a tape as stale if it’s too old or if the prompt has changed.
+
+**🔧 Simple DSL** – Just wrap your LLM call in LLMTape.use("my_call") { ... } and it handles the rest.
+
+**📂 Configurable Storage** – Choose where tapes live (e.g. tmp/fixtures, spec/fixtures/llm).
+
+**🚀 CI-Friendly** – Run in replay mode to avoid network calls and API keys entirely on CI.
+
+---
+
+## 📦 Installation
+
+Add this gem to your application's `Gemfile`:
 
 ```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+gem "LLMTape", "~> 0.1.0"
 ```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+## Configuration
+```ruby
+require "llm_tape"
 
-```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+# Configure LLMTape
+LLMTape.configure(
+  fixtures_directory_path: "tmp/fixtures/llm",
+  mode: (ENV["LLM_TAPE"] || "auto").to_sym # :record, :replay, or :auto
+)
 ```
 
 ## Usage
+```ruby
+class LLMTest < Minitest::Test
+  def test_three_word_greeting
+    prompt = "Say hello in exactly three words."
+    result = LLMTape.use("three_word_greeting", request: { prompt: prompt }) do
+      RubyLLM.chat.ask(prompt)
+    end
 
-TODO: Write usage instructions here
+    refute_empty result.to_s.strip
+  end
+end
+```
 
-## Development
+## CLI
+```bash
+LLM_TAPE=record/replay/auto bundle exec rake test
+```
+
+## 🛠 Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
