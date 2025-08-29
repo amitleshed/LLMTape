@@ -7,53 +7,50 @@ require_relative "LLMTape/services/stale_buster"
 require_relative "LLMTape/services/utilities"
 
 module LLMTape
+  DEFAULT_FIXTURES_PATH = "test/fixtures/llm"
+  DEFAULT_MODE          = (ENV["LLMTape"] || "auto").to_sym
+
   class << self
     attr_accessor :fixtures_directory_path, :mode
 
-    def configure(
-      fixtures_directory_path: FIXTURES_DIRECTORY_PATH,
-      mode: MODE
-    )
-
+    def configure(fixtures_directory_path: DEFAULT_FIXTURES_PATH, mode: DEFAULT_MODE)
       self.fixtures_directory_path = fixtures_directory_path.to_s
       self.mode = mode
       FileUtils.mkdir_p(self.fixtures_directory_path)
     end
 
-    def use(fixture_description, record: false, request: nil, &block)
-      raise ArgumentError, "Block is required" unless block_given?
-      raise ArgumentError, "Fixture description is required" if fixture_description.nil? || fixture_description.strip.empty?
+    def use(description, record: false, request: nil, &block)
+      raise ArgumentError, "You must provide a block" unless block_given?
+      raise ArgumentError, "Description is required" if description.to_s.strip.empty?
 
-      fixture_path    = File.join(FIXTURES_DIRECTORY_PATH, "#{fixture_description}.yml")
-      req = request || {}
-      res = block.call
-      @operation_mode = record ? :record : mode 
-      @stale = LLMTape::Services::StaleBuster.call(fixture_description, req[:prompt])
+      fixture_path     = File.join(DEFAULT_FIXTURES_PATH, "#{description}.yml")
+      current_request  = request || {}
+      current_response = block.call
 
-      LLMTape::Services::Record.call(
-        description: fixture_description,
-        request:     req,
-        response:    res,
-        metadata:    { fixture_path: fixture_path, mode: @operation_mode }
+      @operation_mode = record ? :record : mode
+      @stale          = Services::StaleBuster.call(description, current_request[:prompt])
+
+      Services::Record.call(
+        description: description,
+        request:     current_request,
+        response:    current_response,
+        metadata:    { fixture_path:, mode: @operation_mode }
       ) if should_record?
 
-      LLMTape::Services::Replay.call(
-        description: fixture_description,
-        request:     req
+      Services::Replay.call(
+        description: description,
+        request:     current_request
       ) if should_replay?
     end
-  end
 
-  private
+    private
 
-  FIXTURES_DIRECTORY_PATH = "test/fixtures/llm"
-  MODE                    = (ENV["LLMTape"] || "auto").to_sym
+    def should_replay?
+      (@operation_mode == :replay || @operation_mode == :auto) && !@stale
+    end
 
-  def self.should_replay?
-    (@operation_mode == :replay || @operation_mode == :auto) && !@stale
-  end
-
-  def self.should_record?
-    @operation_mode == :record || @stale
+    def should_record?
+      @operation_mode == :record || @stale
+    end
   end
 end
