@@ -5,7 +5,7 @@ require "debug"
 
 class LLMRecordTest < Minitest::Test
   FIXTURE_DIR  = "tmp/fixtures"
-  FIXTURE_PATH = File.join(FIXTURE_DIR, "llm_calls.yml")
+  FIXTURE_PATH = File.join(FIXTURE_DIR, "llm_tapes.yml")
 
   def setup
     FileUtils.mkdir_p(FIXTURE_DIR)

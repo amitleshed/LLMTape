@@ -35,7 +35,7 @@ module LLMTape
       def self.fixture_path
         File.join(
           LLMTape.fixtures_directory_path,
-          "llm_calls.yml"
+          "llm_tapes.yml"
         )
       end
 

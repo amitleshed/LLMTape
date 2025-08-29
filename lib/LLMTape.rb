@@ -30,17 +30,19 @@ module LLMTape
       @operation_mode = record ? :record : mode
       @stale          = Services::StaleBuster.call(description, current_request[:prompt])
 
-      Services::Record.call(
+      response = Services::Record.call(
         description: description,
         request:     current_request,
         response:    current_response,
         metadata:    { fixture_path:, mode: @operation_mode }
       ) if should_record?
 
-      Services::Replay.call(
+      response = Services::Replay.call(
         description: description,
         request:     current_request
       ) if should_replay?
+
+      response
     end
 
     private

@@ -3,7 +3,7 @@ module LLMTape
     class Replay
       attr_reader :description, :request
 
-      def self.call(description:, request:, path: File.join(LLMTape.fixtures_directory_path, "llm_calls.yml"))
+      def self.call(description:, request:, path: File.join(LLMTape.fixtures_directory_path, "llm_tapes.yml"))
         new(
           description: description,
           request:     request,
@@ -11,7 +11,7 @@ module LLMTape
         ).call
       end
 
-      def initialize(description:, request:, path: File.join(LLMTape.fixtures_directory_path, "llm_calls.yml"))
+      def initialize(description:, request:, path: File.join(LLMTape.fixtures_directory_path, "llm_tapes.yml"))
         @description  = description
         @request      = request
         @fixture_path = path

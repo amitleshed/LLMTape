@@ -12,6 +12,7 @@ module LLMTape
       def self.find_fixture(fixture_path, description)
         return nil unless File.exist?(fixture_path)
 
+        fixture_path = File.join(LLMTape.fixtures_directory_path, "llm_tapes.yml")
         docs = YAML.load_stream(File.read(fixture_path)).compact
         docs = [YAML.safe_load(File.read(fixture_path))] if docs.empty?
 

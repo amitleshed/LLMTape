@@ -5,7 +5,7 @@ require "debug"
 
 class LLMStaleTest < Minitest::Test
   FIXTURE_DIR  = "tmp/fixtures"
-  FIXTURE_PATH = File.join(FIXTURE_DIR, "llm_calls.yml")
+  FIXTURE_PATH = File.join(FIXTURE_DIR, "llm_tapes.yml")
 
   def setup
     # FileUtils.rm_rf(FIXTURE_DIR)
@@ -31,7 +31,7 @@ class LLMStaleTest < Minitest::Test
 
     assert File.exist?(FIXTURE_PATH), "Fixture file should be created"
 
-    stale = LLMTape::Services::StaleBuster.call("Basic LLM Fresh call")
+    stale = LLMTape::Services::StaleBuster.call("Basic LLM Fresh call", request[:prompt])
     assert_equal false, stale, "Fixture should not be stale"
   end
 
@@ -49,7 +49,7 @@ class LLMStaleTest < Minitest::Test
 
     assert File.exist?(FIXTURE_PATH), "Fixture file should be created"
 
-    stale = LLMTape::Services::StaleBuster.call("Basic LLM Stale call")
+    stale = LLMTape::Services::StaleBuster.call("Basic LLM Stale call", request[:prompt])
     assert_equal true, stale, "Fixture should be stale"
   end
 end

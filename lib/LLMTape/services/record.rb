@@ -48,13 +48,8 @@ module LLMTape
           }
         }
       
-        fixture_file_path = File.join(
-          LLMTape.fixtures_directory_path,
-          "llm_calls.yml"
-        )
-      
-        file_exists = File.exist?(fixture_file_path)
-        fixtures    = YAML.load_stream(File.read(fixture_file_path)) if file_exists
+        file_exists = File.exist?(file_path)
+        fixtures    = YAML.load_stream(File.read(file_path)) if file_exists
         fixtures    = [] unless file_exists
       
         existing_index = fixtures.find_index { |f| f["description"] == @description }
@@ -62,13 +57,20 @@ module LLMTape
         fixtures[existing_index] = fixture_data if existing_index
         fixtures << fixture_data                unless existing_index
       
-        File.open(fixture_file_path, "w") do |file|
+        File.open(file_path, "w") do |file|
           fixtures.each { |fixture| file.write(fixture.to_yaml) }
         end
       end
 
       def generate_hash(description)
         description.downcase.split.join("_") + "_" + Digest::SHA256.hexdigest(description)[0..7]
+      end
+
+      def file_path
+        fixture_file_path = File.join(
+          LLMTape.fixtures_directory_path,
+          "llm_tapes.yml"
+        )
       end
     end
   end
