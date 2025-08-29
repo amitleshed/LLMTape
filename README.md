@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo.png" alt="LLMTape Logo" width="250"/>
+  <img src="logo_white.png" alt="LLMTape Logo" width="250"/>
 </p>
 
 # 🎥 LLMTape
