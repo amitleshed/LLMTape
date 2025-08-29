@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="logo.png" alt="LLMTape Logo" width="250"/>
+</p>
 
 # 🎥 LLMTape
 
