@@ -36,7 +36,9 @@ It works like a cassette tape: record an API call once, then replay it forever.
 Add this gem to your application's `Gemfile`:
 
 ```bash
-gem "LLMTape", "~> 0.1.0"
+gem "LLMTape", "~> 0.1.0" # in your gemfile
+bundle add LLMTape        # or through cli
+bundle install
 ```
 
 ## ⚙️ Configuration
