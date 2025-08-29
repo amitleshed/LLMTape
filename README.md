@@ -12,16 +12,9 @@ It works like a cassette tape: record an API call once, then replay it forever.
 
 🧪 Seamless — wrap any LLM client call in LLMTape.use("name") { ... }.
 
-LLMTape makes it easy to develop against live LLMs locally while ensuring your test suite stays stable and reproducible.
 ---
 
 ## 🌟 Features
-
-- **Record LLM Calls**: Capture requests and responses and save them as fixtures.
-- **Replay Fixtures**: Simulate LLM responses without making real API calls.
-- **Stale Detection**: Automatically detect outdated fixtures and refresh them.
-- **Flexible Modes**: Choose between `:record`, `:replay`, or `:auto` modes for seamless operation.
-- **Easy Configuration**: Set up your fixtures directory and mode in just a few lines of code.
 
 **🎥 Record & Replay** – Capture any LLM API call once, then replay it in future test runs.
 
