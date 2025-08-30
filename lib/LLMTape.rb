@@ -29,17 +29,17 @@ module LLMTape
 
     private
 
+    def safety_first!(description, &block)
+      raise ArgumentError, "You must provide a block" unless block_given?
+      raise ArgumentError, "Description is required" if description.to_s.strip.empty?
+    end
+
     def setup(description, record, request, &block)
       @fixture_path     = File.join(fixtures_directory_path, "#{description}.yml")
       @current_request  = request || {}
       @current_response = block.call
       @operation_mode   = record ? :record : mode
       @stale            = StaleBuster.call(description, @current_request[:prompt])
-    end
-
-    def safety_first!(description, &block)
-      raise ArgumentError, "You must provide a block" unless block_given?
-      raise ArgumentError, "Description is required" if description.to_s.strip.empty?
     end
 
     def configure_fixtures_directory(fixtures_directory_path: DEFAULT_FIXTURES_PATH, mode: DEFAULT_MODE)
