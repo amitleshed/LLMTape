@@ -1,0 +1,12 @@
+---
+description: My second LLM call
+data:
+  id: my_second_llm_call_55199671
+  request:
+    :prompt: Hello, LLM!
+  response:
+    :prompt: Hello, LLM!
+  metadata:
+    :fixture_path: test/fixtures/llm/My second LLM call.yml
+    :mode: :auto
+    :created_at: '2025-08-30T19:56:31Z'

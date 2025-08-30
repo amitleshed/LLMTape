@@ -7,45 +7,61 @@ require_relative "LLMTape/services/stale_buster"
 require_relative "LLMTape/services/utilities"
 
 module LLMTape
+  Record      = Services::Record
+  Replay      = Services::Replay
+  StaleBuster = Services::StaleBuster
+
   DEFAULT_FIXTURES_PATH = "test/fixtures/llm"
   DEFAULT_MODE          = (ENV["LLMTape"] || "auto").to_sym
 
   class << self
     attr_accessor :fixtures_directory_path, :mode
-
-    def configure(fixtures_directory_path: DEFAULT_FIXTURES_PATH, mode: DEFAULT_MODE)
-      self.fixtures_directory_path = fixtures_directory_path.to_s
-      self.mode = mode
-      FileUtils.mkdir_p(self.fixtures_directory_path)
-    end
-
+    
     def use(description, record: false, request: nil, &block)
-      raise ArgumentError, "You must provide a block" unless block_given?
-      raise ArgumentError, "Description is required" if description.to_s.strip.empty?
-
-      fixture_path     = File.join(DEFAULT_FIXTURES_PATH, "#{description}.yml")
-      current_request  = request || {}
-      current_response = block.call
-
-      @operation_mode = record ? :record : mode
-      @stale          = Services::StaleBuster.call(description, current_request[:prompt])
-
-      response = Services::Record.call(
-        description: description,
-        request:     current_request,
-        response:    current_response,
-        metadata:    { fixture_path:, mode: @operation_mode }
-      ) if should_record?
-
-      response = Services::Replay.call(
-        description: description,
-        request:     current_request
-      ) if should_replay?
-
+      safety_first!(description, &block)
+      setup(description, record, request, &block)
+      
+      response = if should_record?
+        Record.call(
+          description: description,
+          request:     @current_request,
+          response:    @current_response,
+          metadata:    { fixture_path: @fixture_path, mode: @operation_mode }
+        )
+      elsif should_replay?
+        Replay.call(
+          description: description,
+          request:     @current_request
+        )
+      end
+      
       response
     end
 
+    def configure(fixtures_directory_path: DEFAULT_FIXTURES_PATH, mode: DEFAULT_MODE)
+      configure_fixtures_directory
+    end
+
     private
+
+    def setup(description, record, request, &block)
+      @fixture_path     = File.join(fixtures_directory_path, "#{description}.yml")
+      @current_request  = request || {}
+      @current_response = block.call
+      @operation_mode   = record ? :record : mode
+      @stale            = StaleBuster.call(description, @current_request[:prompt])
+    end
+
+    def safety_first!(description, &block)
+      raise ArgumentError, "You must provide a block" unless block_given?
+      raise ArgumentError, "Description is required" if description.to_s.strip.empty?
+    end
+
+    def configure_fixtures_directory(fixtures_directory_path: DEFAULT_FIXTURES_PATH, mode: DEFAULT_MODE)
+      self.fixtures_directory_path = fixtures_directory_path.to_s
+      FileUtils.mkdir_p(self.fixtures_directory_path)
+      self.mode = mode
+    end
 
     def should_replay?
       (@operation_mode == :replay || @operation_mode == :auto) && !@stale
