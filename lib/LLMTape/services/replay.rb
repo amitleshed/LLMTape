@@ -8,8 +8,6 @@ module LLMTape
       include LLMTape::Backpack::ReplayInitializer
 
       def call
-        puts "Replaying fixture: #{@description}"
-
         LLMTape::Backpack.find_tape(@fixture_path, @description) ||
         raise(ArgumentError, "Tape not found for description: #{@description}")
       end
