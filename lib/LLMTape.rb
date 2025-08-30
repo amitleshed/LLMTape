@@ -11,7 +11,7 @@ module LLMTape
   Replay      = Services::Replay
   StaleBuster = Services::StaleBuster
 
-  DEFAULT_FIXTURES_PATH = "test/fixtures/llm"
+  DEFAULT_FIXTURES_PATH = "test/fixtures/llm_tapes"
   DEFAULT_MODE          = (ENV["LLMTape"] || "auto").to_sym
 
   class << self
