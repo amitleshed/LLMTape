@@ -20,22 +20,7 @@ module LLMTape
     def use(description, record: false, request: nil, &block)
       safety_first!(description, &block)
       setup(description, record, request, &block)
-      
-      response = if should_record?
-        Record.call(
-          description: description,
-          request:     @current_request,
-          response:    @current_response,
-          metadata:    { fixture_path: @fixture_path, mode: @operation_mode }
-        )
-      elsif should_replay?
-        Replay.call(
-          description: description,
-          request:     @current_request
-        )
-      end
-      
-      response
+      use_tape(description)
     end
 
     def configure(fixtures_directory_path: DEFAULT_FIXTURES_PATH, mode: DEFAULT_MODE)
@@ -61,6 +46,22 @@ module LLMTape
       self.fixtures_directory_path = fixtures_directory_path.to_s
       FileUtils.mkdir_p(self.fixtures_directory_path)
       self.mode = mode
+    end
+
+    def use_tape(description)
+      if should_record?
+        Record.call(
+          description: description,
+          request:     @current_request,
+          response:    @current_response,
+          metadata:    { fixture_path: @fixture_path, mode: @operation_mode }
+        )
+      elsif should_replay?
+        Replay.call(
+          description: description,
+          request:     @current_request
+        )
+      end
     end
 
     def should_replay?
