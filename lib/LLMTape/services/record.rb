@@ -22,10 +22,10 @@ module LLMTape
         fixture_data        = build_fixture_data(@description, @request, @response, @metadata, existing_created_at)
         file_exists         = File.exist?(file_path)
         fixtures            = file_exists ? YAML.load_stream(File.read(file_path)) : []
-        existing_index      = fixtures.find_index { |f| f["description"] == @description }
+        matched_fixture     = fixtures.find_index { |f| f["description"] == @description }
 
-        fixtures[existing_index] = fixture_data if existing_index
-        fixtures << fixture_data                unless existing_index
+        fixtures[matched_fixture] = fixture_data if matched_fixture
+        fixtures << fixture_data                 unless matched_fixture
       
         record_dat_tape(file_path, fixtures, fixture_data)
       end
