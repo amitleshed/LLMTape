@@ -45,7 +45,6 @@ bundle install
 ```ruby
 require "llm_tape"
 
-# Configure LLMTape
 LLMTape.configure(
   fixtures_directory_path: "tmp/fixtures/llm",
   mode: (ENV["LLM_TAPE"] || "auto").to_sym # :record, :replay, or :auto
