@@ -24,4 +24,13 @@ class TestLLMTape < Minitest::Test
       { prompt: prompt }
     end
   end
+
+  def test_tape_not_found
+    prompt = "Nobody can ever find this!"
+    error  = assert_raises(ArgumentError) do
+      LLMTape::Services::Replay.call(description: "Tape to hide ;)", request: {prompt: prompt}).call
+    end
+
+    assert_match "Tape not found for description: Tape to hide ;)", error.message
+  end
 end
