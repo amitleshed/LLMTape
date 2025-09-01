@@ -27,8 +27,6 @@ It wraps any LLM client with a tiny DSL. In test environement, it records “tap
 
 **🔧 Simple DSL** – Just wrap your LLM call in LLMTape.use("my_call") { ... } and it handles the rest.
 
-**📂 Configurable Storage** – Choose where tapes live (e.g. tmp/fixtures, spec/fixtures/llm).
-
 **🚀 CI-Friendly** – Run in replay mode to avoid network calls and API keys entirely on CI.
 
 ---
