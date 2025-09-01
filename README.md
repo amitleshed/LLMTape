@@ -87,7 +87,7 @@ LLM_TAPE=record/replay/auto bundle exec rake test
 # .github/workflows/test.yml
 
 env:
-  LLM_TAPE: replay   # never record in CI
+  LLM_TAPE: replay
 ```
 
 ## 🛠 Development
