@@ -82,6 +82,14 @@ end
 LLM_TAPE=record/replay/auto bundle exec rake test
 ```
 
+## 🚦 CI
+```yaml
+# .github/workflows/test.yml
+
+env:
+  LLM_TAPE: replay   # never record in CI
+```
+
 ## 🛠 Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
