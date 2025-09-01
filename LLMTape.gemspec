@@ -3,7 +3,7 @@
 require_relative "lib/LLMTape/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "LLMTape"
+  spec.name = "llm_tape"
   spec.version = LLMTape::VERSION
   spec.authors = ["Amit Leshed"]
   spec.email = ["amitleshed@icloud.com"]
