@@ -36,8 +36,8 @@ It wraps any LLM client with a tiny DSL. In test environement, it records “tap
 Add this gem to your application's `Gemfile`:
 
 ```bash
-gem "LLMTape", "~> 0.1.0" # in your gemfile
-bundle add LLMTape        # or through cli
+gem "LLMTape"       # in your gemfile
+bundle add LLMTape  # or through cli
 bundle install
 ```
 

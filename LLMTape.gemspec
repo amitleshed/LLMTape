@@ -10,13 +10,13 @@ Gem::Specification.new do |spec|
 
   spec.summary = "LLMTape is a lightweight Ruby gem for testing code that calls Large Language Models. It works like a cassette tape: record an API call once, then replay it forever."
   spec.description = "It wraps any LLM client with a tiny DSL. In test environement, it records “tapes” (YAML fixtures of real LLM calls) and replays them on subsequent runs; when a tape is stale, it re-records to keep tests current. Production stays clean and safe, while CI avoids hammering the API every run--yielding deterministic tests, faster pipelines, and fewer tokens spent."
-  spec.homepage = "https://www.amitleshed.com"
+  spec.homepage = "https://github.com/amitleshed/LLMTape"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.2.0"
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "https://www.amitleshed.com"
+  spec.metadata["source_code_uri"] = "https://github.com/amitleshed/LLMTape"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
