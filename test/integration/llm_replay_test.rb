@@ -4,7 +4,7 @@ require "yaml"
 require "debug"
 
 class LLMReplayTest < Minitest::Test
-  FIXTURE_DIR  = "tmp/fixtures"
+  FIXTURE_DIR  = "tmp/fixtures/llm"
   FIXTURE_PATH = File.join(FIXTURE_DIR, "llm_tapes.yml")
 
   def setup

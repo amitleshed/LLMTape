@@ -11,7 +11,7 @@ module LLMTape
   Replay      = Services::Replay
   StaleBuster = Services::StaleBuster
 
-  DEFAULT_FIXTURES_PATH = "test/fixtures/llm_tapes"
+  DEFAULT_FIXTURES_PATH = "test/fixtures/llm"
   DEFAULT_MODE          = (ENV["LLMTape"] || "auto").to_sym
 
   class << self
@@ -19,12 +19,13 @@ module LLMTape
     
     def use(description, record: false, request: nil, &block)
       safety_first!(description, &block)
+      configure unless fixtures_directory_path
       setup(description, record, request, &block)
       use_tape(description)
     end
 
     def configure(fixtures_directory_path: DEFAULT_FIXTURES_PATH, mode: DEFAULT_MODE)
-      configure_fixtures_directory
+      configure_fixtures_directory(fixtures_directory_path:, mode:)
     end
 
     private

@@ -5,7 +5,7 @@ require "test_helper"
 class TestLLMTape < Minitest::Test
   def setup
     LLMTape.configure(
-      fixtures_directory_path: "tmp/fixtures",
+      fixtures_directory_path: "tmp/fixtures/llm",
       mode: :auto
     )
   end
