@@ -16,9 +16,11 @@ module LLMTape
       def self.stale?(current_prompt:)
         return true unless file_exists?
         fixture      = LLMTape::Backpack.find_tape(fixture_path, @description)
+        return true unless fixture
         created_at   = fixture.dig("data", "metadata", :created_at)&.to_s
+        return true unless created_at
         created_time = Time.parse(created_at) rescue nil
-        return true unless fixture && created_at && created_time
+        return true unless created_time
       
         too_old      = (Time.now - created_time) > 30*24*60*60
         prompt_diff  = fixture.dig("data", "request", :prompt).to_s != current_prompt.to_s
