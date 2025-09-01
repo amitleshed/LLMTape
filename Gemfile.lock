@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    LLMTape (0.4.0)
+    LLMTape (0.6.0)
 
 GEM
   remote: https://rubygems.org/
