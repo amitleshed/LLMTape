@@ -53,6 +53,18 @@ LLMTape.configure(
 
 ## 📖 Usage
 ```ruby
+class MyFancyAIController < ApplicationController
+  def create
+    prompt = params[:prompt].presence || "LLM Prompt"
+    LLMTape.use("my_fancy_ai#create", request: { prompt: prompt }) do
+      RubyLLM.chat.ask(prompt) # Say you use RubyLLM (it's great you should)
+    end
+  end
+
+  # LLMTape records/replays only in test; it enforces the env check internally.
+  # Dev/Prod behavior is unchanged (straight passthrough). No extra guards needed.
+end
+
 class LLMTest < Minitest::Test
   def test_three_word_greeting
     prompt = "Say hello in exactly three words."
