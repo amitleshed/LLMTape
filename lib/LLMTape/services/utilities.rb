@@ -8,11 +8,12 @@ module LLMTape
       Digest::SHA256.hexdigest(description)[0..7]
     end
 
-    def create_file
+    def self.create_file
       fixture_file_path = File.join(
         LLMTape.fixtures_directory_path,
         "llm_tapes.yml"
       )
+
       FileUtils.mkdir_p(LLMTape.fixtures_directory_path) unless Dir.exist?(LLMTape.fixtures_directory_path)
       FileUtils.touch(fixture_file_path) unless File.exist?(fixture_file_path)
       fixture_file_path
@@ -24,7 +25,7 @@ module LLMTape
       fixture_path = File.join(LLMTape.fixtures_directory_path, "llm_tapes.yml")
       create_file unless File.exist?(fixture_path)
       docs = YAML.load_stream(File.read(fixture_path)).compact
-      docs = [YAML.safe_load(File.read(fixture_path))] if docs.empty?
+      docs = [YAML.safe_load(File.read(fixture_path))].compact if docs.empty?
       target = description.to_s
 
       docs.find { |doc| (doc["description"] || doc[:description]).to_s == target }

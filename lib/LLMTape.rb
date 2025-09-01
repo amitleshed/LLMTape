@@ -19,7 +19,9 @@ module LLMTape
     
     def use(description, record: false, request: nil, &block)
       safety_first!(description, &block)
-      configure unless fixtures_directory_path
+      return block.call unless test_env?
+
+      configure if fixtures_directory_path.to_s.empty?
       setup(description, record, request, &block)
       use_tape(description)
     end
@@ -29,6 +31,10 @@ module LLMTape
     end
 
     private
+
+    def test_env?
+      ENV["RAILS_ENV"] == "test" || ENV["RACK_ENV"] == "test" || ENV["ENV"] == "test"
+    end
 
     def safety_first!(description, &block)
       raise ArgumentError, "You must provide a block" unless block_given?

@@ -3,6 +3,8 @@
 require "test_helper"
 
 class TestLLMTape < Minitest::Test
+  TAPE_FILE = File.join("tmp/fixtures/llm", "llm_tapes.yml")
+
   def setup
     LLMTape.configure(
       fixtures_directory_path: "tmp/fixtures/llm",
@@ -32,5 +34,26 @@ class TestLLMTape < Minitest::Test
     end
 
     assert_match "Tape not found for description: Tape to hide ;)", error.message
+  end
+
+  def test_record_then_replay_in_test_env
+    ENV["RAILS_ENV"] = "test"
+    FileUtils.rm_f(TAPE_FILE)
+  
+    first = LLMTape.use("greeting", request: { prompt: "hi" }) { "hello world" }
+    assert_equal "hello world", first["data"]["response"], "Should return live response on first call"
+    assert File.exist?(TAPE_FILE), "Tape file should be created"
+  
+    second = LLMTape.use("greeting", request: { prompt: "hi" }) { "NEW LIVE VALUE" }
+    assert_equal "hello world", second["data"]["response"], "Should replay taped response when fresh"
+  end
+  
+  def test_noop_outside_test_env
+    ENV["RAILS_ENV"] = "development"
+    FileUtils.rm_f(TAPE_FILE)
+  
+    value = LLMTape.use("outside_test", request: { prompt: "x" }) { "live call" }
+    assert_equal "live call", value, "Should just return live value outside test env"
+    refute File.exist?(TAPE_FILE), "Should not create any tape outside test env"
   end
 end
