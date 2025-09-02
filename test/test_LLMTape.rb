@@ -40,11 +40,11 @@ class TestLLMTape < Minitest::Test
     ENV["RAILS_ENV"] = "test"
     FileUtils.rm_f(TAPE_FILE)
   
-    first = LLMTape.use("greeting", request: { prompt: "hi" }) { "hello world" }
+    first = LLMTape.use("greeting", request: { prompt: "contact: amit@company.com, key sk-proj-ABCDEF1234567890" }) { "hello world" }
     assert_equal "hello world", first["data"]["response"], "Should return live response on first call"
     assert File.exist?(TAPE_FILE), "Tape file should be created"
   
-    second = LLMTape.use("greeting", request: { prompt: "hi" }) { "NEW LIVE VALUE" }
+    second = LLMTape.use("greeting", request: { prompt: "contact: amit@company.com, key sk-proj-ABCDEF1234567890" }) { "NEW LIVE VALUE" }
     assert_equal "hello world", second["data"]["response"], "Should replay taped response when fresh"
   end
   

@@ -5,6 +5,7 @@ require_relative "LLMTape/services/record"
 require_relative "LLMTape/services/replay"
 require_relative "LLMTape/services/stale_buster"
 require_relative "LLMTape/services/utilities"
+require_relative "LLMTape/services/redactor"
 
 module LLMTape
   Record      = Services::Record
@@ -42,6 +43,9 @@ module LLMTape
     end
 
     def setup(description, record, request, &block)
+      redacted         = LLMTape::Redactor.redact(request[:prompt])
+      request[:prompt] = redacted if request && request[:prompt]
+
       @fixture_path     = File.join(fixtures_directory_path, "#{description}.yml")
       @current_request  = request || {}
       @current_response = block.call
