@@ -46,8 +46,6 @@ module LLMTape
         File.open(file_path, "w") do |file|
           fixtures.each { |fixture| file.write(fixture.to_yaml) }
         end
-        puts "should record #{file_path}"
-
 
         fixture_data
       end
