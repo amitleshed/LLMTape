@@ -11,7 +11,7 @@ class LLMRedactionTest < Minitest::Test
     input = "contact: amit@company.com, key sk-proj-ABCDEF1234567890"
     out   = LLMTape::Redactor.redact(input)
 
-    assert_match(/a\*+@example\.com/, out)
+    assert_match(/a\*+@company\.com/, out)
     assert_includes out, "sk-********"
   end
 

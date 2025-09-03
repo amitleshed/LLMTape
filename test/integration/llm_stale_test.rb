@@ -8,7 +8,6 @@ class LLMStaleTest < Minitest::Test
   FIXTURE_PATH = File.join(FIXTURE_DIR, "llm_tapes.yml")
 
   def setup
-    # FileUtils.rm_rf(FIXTURE_DIR)
     FileUtils.mkdir_p(FIXTURE_DIR)
 
     LLMTape.configure(

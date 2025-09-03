@@ -21,7 +21,7 @@ class TestLLMTape < Minitest::Test
   end
 
   def test_flow
-    prompt = "Hello, LLM!"
+    prompt = "Hello, LLM!!"
     response = LLMTape.use("My second LLM call", request: {prompt: prompt}) do
       { prompt: prompt }
     end

@@ -12,7 +12,7 @@ module LLMTape
   Replay      = Services::Replay
   StaleBuster = Services::StaleBuster
 
-  DEFAULT_FIXTURES_PATH = "test/fixtures/llm"
+  DEFAULT_FIXTURES_PATH = "test/fixtures/llm_tapes"
   DEFAULT_MODE          = (ENV["LLMTape"] || "auto").to_sym
 
   class << self
@@ -46,7 +46,7 @@ module LLMTape
       redacted         = LLMTape::Redactor.redact(request[:prompt])
       request[:prompt] = redacted if request && request[:prompt]
 
-      @fixture_path     = File.join(fixtures_directory_path, "#{description}.yml")
+      @fixture_path     = DEFAULT_FIXTURES_PATH
       @current_request  = request || {}
       @current_response = block.call
       @operation_mode   = record ? :record : mode

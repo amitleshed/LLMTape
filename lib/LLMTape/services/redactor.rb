@@ -18,20 +18,24 @@ module LLMTape
       api_keys: Regexp.union(OPENAI, ANTHRO, GOOGLE, AWS_AK, AWS_SK)
     }.freeze
 
-    def redact(text,
-               keep_lengths: DEFAULT_KEEP_LENGTHS,
-               builtins:     DEFAULT_BUILTINS,
-               do_not_store: DEFAULT_DO_NOT_STORE)
-    input = (text || "").dup
+    def redact(text, keep_lengths: DEFAULT_KEEP_LENGTHS,
+                     builtins: DEFAULT_BUILTINS,
+                     do_not_store: DEFAULT_DO_NOT_STORE)
 
-      do_not_store.each { |rx| puts "LLMTape::Redactor: forbidden secret matched #{input}" if input.match?(rx) }
-
-      builtins.each do |name|
-        rx = BUILTIN_MAP[name]
-        next unless rx
-      input = keep_lengths ? keep_len_mask(input, rx, name) : input.gsub(rx, replacement_for(name))
+      input = (text || "").dup
+      do_not_store.each do |regex|
+        if input.match?(regex)
+          puts "LLMTape::Redactor: forbidden secret matched #{input}"
+        end
       end
-
+    
+      builtins.each do |type|
+        regex = BUILTIN_MAP[type]
+        next unless regex
+    
+        input = keep_lengths ? keep_len_mask(input, regex, type) : input.gsub(regex, replacement_for(type))
+      end
+    
       input
     end
 
@@ -40,17 +44,19 @@ module LLMTape
     end
     module_function :replacement_for
 
-    def keep_len_mask(input, rx, name)
-      input.gsub(rx) do |m|
-        case name
+    def keep_len_mask(input, regex, type)
+      input.gsub(regex) do |match|
+        case type
         when :emails
-          local, = m.split("@", 2)
-          masked_local = (local[0,1] || "") + ("*" * [local.length - 1, 3].max)
-          "#{masked_local}@example.com"
+          local_part   = match.split("@").first
+          masked_local = "#{local_part[0]}#{'*' * [local_part.length - 1, 3].max}"
+          match[0, local_part.size] = masked_local
+
+          match
         when :api_keys
-          prefix = m[0,3] # likely "sk-"
-          stars  = [m.length - prefix.length, 8].max
-          "#{prefix}#{'*' * stars}"
+          prefix      = match[0, 3] # e.g., "sk-"
+          masked_part = '*' * [match.length - prefix.length, 8].max
+          "#{prefix}#{masked_part}"
         else
           "[REDACTED]"
         end
