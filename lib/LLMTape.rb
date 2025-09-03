@@ -5,13 +5,14 @@ require_relative "LLMTape/services/record"
 require_relative "LLMTape/services/replay"
 require_relative "LLMTape/services/stale_buster"
 require_relative "LLMTape/services/utilities"
+require_relative "LLMTape/services/redactor"
 
 module LLMTape
   Record      = Services::Record
   Replay      = Services::Replay
   StaleBuster = Services::StaleBuster
 
-  DEFAULT_FIXTURES_PATH = "test/fixtures/llm"
+  DEFAULT_FIXTURES_PATH = "test/fixtures/llm_tapes"
   DEFAULT_MODE          = (ENV["LLMTape"] || "auto").to_sym
 
   class << self
@@ -42,7 +43,10 @@ module LLMTape
     end
 
     def setup(description, record, request, &block)
-      @fixture_path     = File.join(fixtures_directory_path, "#{description}.yml")
+      redacted         = LLMTape::Redactor.redact(request[:prompt])
+      request[:prompt] = redacted if request && request[:prompt]
+
+      @fixture_path     = DEFAULT_FIXTURES_PATH
       @current_request  = request || {}
       @current_response = block.call
       @operation_mode   = record ? :record : mode

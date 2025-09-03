@@ -8,16 +8,10 @@ class LLMReplayTest < Minitest::Test
   FIXTURE_PATH = File.join(FIXTURE_DIR, "llm_tapes.yml")
 
   def setup
-    # FileUtils.mkdir_p(FIXTURE_DIR)
-
     LLMTape.configure(
       fixtures_directory_path: FIXTURE_DIR,
       mode: :replay
     )
-  end
-
-  def teardown
-    # FileUtils.rm_rf(FIXTURE_DIR)
   end
 
   def test_replay
